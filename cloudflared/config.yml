@@ -1,0 +1,20 @@
+# Cloudflare Tunnel Configuration for Rasa Bakery
+# Generated for: rasabakery.shop
+
+tunnel: ff053451-f3e3-454d-8978-b357f7155e07
+credentials-file: /root/.cloudflared/ff053451-f3e3-454d-8978-b357f7155e07.json
+
+# DNS records to use for routing
+ingress:
+  - hostname: rasabakery.shop
+    service: http://localhost:8080
+  - hostname: "*.rasabakery.shop"
+    service: http://localhost:8080
+  - service: http_status:404
+
+# Log configuration
+loglevel: info
+logfile: /var/log/cloudflared.log
+
+# Additional settings
+no-auto-update: false

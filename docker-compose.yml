@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - cake-net
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgres://cakeuser:cakepass@db:5432/cakedb
+      - NODE_ENV=production
+    networks:
+      - cake-net
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "8080:80"
+      - "8443:443"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - cake-net
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: cakeuser
+      POSTGRES_PASSWORD: cakepass
+      POSTGRES_DB: cakedb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - cake-net
+
+volumes:
+  postgres_data:
+
+networks:
+  cake-net:
+    driver: bridge

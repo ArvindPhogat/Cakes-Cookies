@@ -1,0 +1,28 @@
+# Docker Compose Override for Development
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+version: "3.9"
+
+services:
+  frontend:
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_API_URL=http://localhost:5000
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+
+  backend:
+    environment:
+      - NODE_ENV=development
+      - DEBUG=*
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: npm run dev
+
+  db:
+    environment:
+      - POSTGRES_USER=cakeuser
+      - POSTGRES_PASSWORD=cakepass
+      - POSTGRES_DB=cakedb
